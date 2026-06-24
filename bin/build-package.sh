@@ -16,13 +16,16 @@ mkdir -p "$DIST_DIR" "$WORK_DIR/$THEME_SLUG"
 
 rsync -a \
   --exclude='.git' \
+  --exclude='.github' \
   --exclude='.DS_Store' \
+  --exclude='aws' \
   --exclude='dist' \
   --exclude='bin' \
   --exclude='docker-compose.yml' \
   --exclude='README.md' \
   --exclude='SUBMISSION.md' \
   --exclude='DEPLOYMENT.md' \
+  --exclude='AWS_DEPLOYMENT.md' \
   --exclude='FIGMA_MATCH_CHECKLIST.md' \
   "$ROOT_DIR/" "$WORK_DIR/$THEME_SLUG/"
 

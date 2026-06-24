@@ -127,6 +127,25 @@ For AWS Elastic Beanstalk dev deployment, build:
 
 Then upload `dist/growmodo-aws-eb-wordpress.zip` to a Docker Elastic Beanstalk environment. See `AWS_DEPLOYMENT.md`.
 
+## Main Branch Pipeline
+
+GitHub Actions runs `.github/workflows/main.yml` on every push to `main` and on manual dispatch. The default build job:
+
+- Runs PHP syntax checks for all theme PHP files.
+- Builds `dist/growmodo-assessment-theme.zip`.
+- Builds `dist/growmodo-aws-eb-wordpress.zip`.
+- Validates both ZIP archives.
+- Uploads both ZIPs as workflow artifacts.
+
+The workflow also includes an optional Elastic Beanstalk deploy job. To enable it, configure these GitHub repository settings:
+
+- Repository variable: `ENABLE_AWS_EB_DEPLOY=true`
+- Repository secret: `AWS_ACCESS_KEY_ID`
+- Repository secret: `AWS_SECRET_ACCESS_KEY`
+- Repository secret: `AWS_EB_SOURCE_BUCKET`
+
+The deploy job targets the current dev environment documented in `AWS_DEPLOYMENT.md`: `growmodo-estatein-dev` / `growmodo-estatein-dev-env` in `us-west-2`.
+
 ## Testing Checklist
 
 - Theme activates without fatal errors.

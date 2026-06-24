@@ -19,6 +19,7 @@ cp "$ROOT_DIR/aws/elastic-beanstalk/docker-compose.yml" "$WORK_DIR/docker-compos
 
 rsync -a \
   --exclude='.git' \
+  --exclude='.github' \
   --exclude='.DS_Store' \
   --exclude='dist' \
   --exclude='bin' \
