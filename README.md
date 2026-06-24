@@ -2,6 +2,12 @@
 
 Custom WordPress theme for the Growmodo WordPress Developer assessment. The theme is based on the duplicated Figma template **Real Estate Business Website UI Template Dark Theme | Produce UI Community Copy** and implements the Estatein real estate website direction.
 
+## Live Dev Site
+
+- Dev URL: `http://44.226.48.168/`
+- WordPress Admin: `http://44.226.48.168/wp-admin/`
+- AWS notes: see `AWS_DEPLOYMENT.md`.
+
 ## Project Overview
 
 The assessment asks for a fully functional WordPress website translated from the provided Figma design. This implementation focuses on the requirements called out in the brief: a custom theme, reusable WordPress components, responsive layouts, basic interactive behavior, editable content paths, accessibility, SEO foundations, performance-conscious assets, and clear documentation.
@@ -94,20 +100,8 @@ docker compose down -v
 
 1. Copy this folder into `wp-content/themes/growmodo-assessment`.
 2. In WordPress Admin, go to Appearance > Themes and activate **Growmodo Assessment Theme**.
-3. Create these pages:
-   - Home
-   - About Us
-   - Properties
-   - Services
-   - Contact
-4. Assign the Home page under Settings > Reading.
-5. Assign page templates:
-   - About Us page: **About Us**
-   - Properties page: **Properties**
-   - Services page: **Services**
-   - Contact page: **Contact**
-6. Create a Primary Menu with Home, About Us, Properties, Services, and Contact.
-7. Optional: add Property and Service posts. If no posts exist, the templates show fallback content.
+3. The theme activation creates Home, About Us, Properties, Services, Contact, menus, sample Properties, sample Services, static homepage settings, and pretty permalinks when they are missing.
+4. Optional: add or edit Property and Service posts. If no posts exist, the templates still show fallback content.
 
 ## Dev URL Deployment
 
@@ -124,6 +118,14 @@ Rebuild it with:
 ```
 
 Use WordPress Admin > Appearance > Themes > Add New > Upload Theme, or upload/extract the package into `wp-content/themes/` via SFTP. See `DEPLOYMENT.md` for the full dev URL deployment checklist and required remote access details.
+
+For AWS Elastic Beanstalk dev deployment, build:
+
+```bash
+./bin/build-aws-eb-package.sh
+```
+
+Then upload `dist/growmodo-aws-eb-wordpress.zip` to a Docker Elastic Beanstalk environment. See `AWS_DEPLOYMENT.md`.
 
 ## Testing Checklist
 

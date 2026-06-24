@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: growmodo_wp
+      MYSQL_USER: growmodo
+      MYSQL_PASSWORD: growmodo
+      MYSQL_ROOT_PASSWORD: growmodo_root
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: growmodo_wp
+      WORDPRESS_DB_USER: growmodo
+      WORDPRESS_DB_PASSWORD: growmodo
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_ENVIRONMENT_TYPE', 'development');
+        define('WP_DEBUG', false);
+
+volumes:
+  db_data:

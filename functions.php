@@ -122,6 +122,198 @@ function growmodo_assessment_property_archive_order(WP_Query $query): void
 }
 add_action('pre_get_posts', 'growmodo_assessment_property_archive_order');
 
+function growmodo_assessment_create_seed_page(string $title, string $slug, string $template = '', string $content = ''): int
+{
+    $page = get_page_by_path($slug, OBJECT, 'page');
+
+    if (!$page) {
+        $page_id = wp_insert_post(array(
+            'post_type'    => 'page',
+            'post_status'  => 'publish',
+            'post_title'   => $title,
+            'post_name'    => $slug,
+            'post_content' => $content,
+        ));
+    } else {
+        $page_id = (int) $page->ID;
+    }
+
+    if ($page_id && !is_wp_error($page_id) && $template) {
+        update_post_meta($page_id, '_wp_page_template', $template);
+    }
+
+    return is_wp_error($page_id) ? 0 : (int) $page_id;
+}
+
+function growmodo_assessment_create_seed_post(string $post_type, array $data, array $meta = array()): int
+{
+    $existing = get_page_by_path($data['slug'], OBJECT, $post_type);
+
+    if ($existing) {
+        $post_id = (int) $existing->ID;
+    } else {
+        $post_id = wp_insert_post(array(
+            'post_type'    => $post_type,
+            'post_status'  => 'publish',
+            'post_title'   => $data['title'],
+            'post_name'    => $data['slug'],
+            'post_excerpt' => $data['excerpt'] ?? '',
+            'post_content' => $data['content'] ?? ($data['excerpt'] ?? ''),
+            'menu_order'   => $data['menu_order'] ?? 0,
+        ));
+    }
+
+    if (!$post_id || is_wp_error($post_id)) {
+        return 0;
+    }
+
+    foreach ($meta as $key => $value) {
+        update_post_meta((int) $post_id, $key, $value);
+    }
+
+    return (int) $post_id;
+}
+
+function growmodo_assessment_seed_menu(string $menu_name, array $page_ids, string $location): void
+{
+    $menu = wp_get_nav_menu_object($menu_name);
+
+    if (!$menu) {
+        $menu_id = wp_create_nav_menu($menu_name);
+    } else {
+        $menu_id = (int) $menu->term_id;
+    }
+
+    if (!$menu_id || is_wp_error($menu_id)) {
+        return;
+    }
+
+    $existing_items = wp_get_nav_menu_items($menu_id);
+    $existing_pages = array();
+
+    if ($existing_items) {
+        foreach ($existing_items as $item) {
+            $existing_pages[] = (int) $item->object_id;
+        }
+    }
+
+    foreach ($page_ids as $page_id) {
+        if (!$page_id || in_array((int) $page_id, $existing_pages, true)) {
+            continue;
+        }
+
+        wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-object-id' => (int) $page_id,
+            'menu-item-object'    => 'page',
+            'menu-item-type'      => 'post_type',
+            'menu-item-status'    => 'publish',
+        ));
+    }
+
+    $locations              = get_theme_mod('nav_menu_locations', array());
+    $locations[$location]   = (int) $menu_id;
+    set_theme_mod('nav_menu_locations', $locations);
+}
+
+function growmodo_assessment_seed_content(): void
+{
+    growmodo_assessment_register_post_types();
+
+    $home_id = growmodo_assessment_create_seed_page(
+        __('Home', 'growmodo-assessment'),
+        'home',
+        '',
+        __('Estatein homepage powered by the custom Growmodo assessment theme.', 'growmodo-assessment')
+    );
+    $about_id = growmodo_assessment_create_seed_page(__('About Us', 'growmodo-assessment'), 'about-us', 'page-templates/about-us.php');
+    $properties_id = growmodo_assessment_create_seed_page(__('Properties', 'growmodo-assessment'), 'properties', 'page-templates/properties.php');
+    $services_id = growmodo_assessment_create_seed_page(__('Services', 'growmodo-assessment'), 'services', 'page-templates/services.php');
+    $contact_id = growmodo_assessment_create_seed_page(__('Contact', 'growmodo-assessment'), 'contact', 'page-templates/contact.php');
+
+    if ($home_id) {
+        update_option('show_on_front', 'page');
+        update_option('page_on_front', $home_id);
+    }
+
+    $menu_page_ids = array($home_id, $about_id, $properties_id, $services_id, $contact_id);
+    growmodo_assessment_seed_menu(__('Primary Menu', 'growmodo-assessment'), $menu_page_ids, 'primary');
+    growmodo_assessment_seed_menu(__('Footer Menu', 'growmodo-assessment'), $menu_page_ids, 'footer');
+
+    $properties = array(
+        array(
+            'title'      => __('Seaside Serenity Villa', 'growmodo-assessment'),
+            'slug'       => 'seaside-serenity-villa',
+            'excerpt'    => __('A stunning villa in a peaceful coastal neighborhood with premium amenities.', 'growmodo-assessment'),
+            'menu_order' => 1,
+            'meta'       => array(
+                'price'         => '$1,250,000',
+                'bedrooms'      => '4-Bedroom',
+                'bathrooms'     => '3-Bathroom',
+                'property_type' => __('Villa', 'growmodo-assessment'),
+            ),
+        ),
+        array(
+            'title'      => __('Metropolitan Haven', 'growmodo-assessment'),
+            'slug'       => 'metropolitan-haven',
+            'excerpt'    => __('A chic apartment with panoramic city views and refined finishes.', 'growmodo-assessment'),
+            'menu_order' => 2,
+            'meta'       => array(
+                'price'         => '$650,000',
+                'bedrooms'      => '2-Bedroom',
+                'bathrooms'     => '2-Bathroom',
+                'property_type' => __('Apartment', 'growmodo-assessment'),
+            ),
+        ),
+        array(
+            'title'      => __('Rustic Retreat Cottage', 'growmodo-assessment'),
+            'slug'       => 'rustic-retreat-cottage',
+            'excerpt'    => __('A warm countryside cottage designed for comfort, privacy, and weekend escapes.', 'growmodo-assessment'),
+            'menu_order' => 3,
+            'meta'       => array(
+                'price'         => '$350,000',
+                'bedrooms'      => '3-Bedroom',
+                'bathrooms'     => '2-Bathroom',
+                'property_type' => __('Cottage', 'growmodo-assessment'),
+            ),
+        ),
+    );
+
+    foreach ($properties as $property) {
+        $meta = $property['meta'];
+        unset($property['meta']);
+        growmodo_assessment_create_seed_post('property', $property, $meta);
+    }
+
+    $services = array(
+        array(
+            'title'      => __('Find Your Dream Home', 'growmodo-assessment'),
+            'slug'       => 'find-your-dream-home',
+            'excerpt'    => __('Personalized search support and curated property shortlists.', 'growmodo-assessment'),
+            'menu_order' => 1,
+        ),
+        array(
+            'title'      => __('Unlock Property Value', 'growmodo-assessment'),
+            'slug'       => 'unlock-property-value',
+            'excerpt'    => __('Strategic selling support for pricing, positioning, and presentation.', 'growmodo-assessment'),
+            'menu_order' => 2,
+        ),
+        array(
+            'title'      => __('Smart Investment Guidance', 'growmodo-assessment'),
+            'slug'       => 'smart-investment-guidance',
+            'excerpt'    => __('Market-aware recommendations for confident property decisions.', 'growmodo-assessment'),
+            'menu_order' => 3,
+        ),
+    );
+
+    foreach ($services as $service) {
+        growmodo_assessment_create_seed_post('service', $service);
+    }
+
+    update_option('permalink_structure', '/%postname%/');
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'growmodo_assessment_seed_content');
+
 function growmodo_assessment_customize_register(WP_Customize_Manager $wp_customize): void
 {
     $wp_customize->add_section('growmodo_assessment_home', array(

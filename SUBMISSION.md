@@ -9,8 +9,9 @@ Thank you for the assessment opportunity. I built a custom WordPress theme based
 ## Deliverables
 
 - GitHub repository: `[add GitHub repository URL here]`
-- Demo URL: `[add live demo URL here if available]`
+- Demo URL: `http://44.226.48.168/`
 - WordPress upload package: `dist/growmodo-assessment-theme.zip`
+- AWS Elastic Beanstalk package: `dist/growmodo-aws-eb-wordpress.zip`
 - Local setup: run `docker compose up -d` and `./bin/setup-local.sh`, then open `http://localhost:8080`. See `README.md` for full instructions.
 
 ## Completed Scope
@@ -29,3 +30,5 @@ Thank you for the assessment opportunity. I built a custom WordPress theme based
 This was treated as the requested time-boxed stress test. I prioritized a working custom WordPress theme, responsive layout, clear content management paths, and close alignment with the Figma visual language. With more time, I would continue refining exact section-by-section spacing and expanding editor controls for every homepage content block.
 
 For a dev URL deployment, upload `dist/growmodo-assessment-theme.zip` to a WordPress dev instance and follow `DEPLOYMENT.md`. Direct remote deployment from this machine requires the target WordPress admin or SFTP/SSH credentials.
+
+For AWS, `dist/growmodo-aws-eb-wordpress.zip` was deployed to a single-instance Docker Elastic Beanstalk environment in `us-west-2`. The working dev URL is `http://44.226.48.168/`. The Elastic Beanstalk CNAME created during provisioning was `growmodo-estatein-dev-env.eba-pd6rqmm3.us-west-2.elasticbeanstalk.com`, but DNS was still propagating at verification time. AWS public dev URLs may incur AWS public IPv4 and compute/storage charges.
