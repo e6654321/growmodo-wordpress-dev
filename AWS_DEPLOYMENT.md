@@ -46,6 +46,29 @@ The Elastic Beanstalk app runs:
 
 The EC2 IP was verified successfully immediately after deployment. The Elastic Beanstalk CNAME may need additional DNS propagation time before it resolves consistently.
 
+## GitHub Actions Deployment
+
+Pushes to `main` run `.github/workflows/main.yml`. The build job passes and the deploy job uses GitHub OIDC to assume:
+
+```text
+arn:aws:iam::004450693142:role/GitHubActionsGrowmodoEstateinDeploy
+```
+
+The role uploads source bundles to:
+
+```text
+elasticbeanstalk-us-west-2-004450693142
+```
+
+Required deploy permissions include Elastic Beanstalk application/environment updates and these S3 permissions on the Elastic Beanstalk source bucket:
+
+- `s3:ListBucket`
+- `s3:GetObject`
+- `s3:PutObject`
+- `s3:CreateBucket`
+
+The `s3:CreateBucket` action is required by Elastic Beanstalk during `UpdateEnvironment`, even when the region source bucket already exists.
+
 ## Console Deployment Path
 
 1. Open AWS Console.
