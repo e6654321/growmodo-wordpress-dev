@@ -69,6 +69,13 @@ Required deploy permissions include Elastic Beanstalk application/environment up
 
 The `s3:CreateBucket` action is required by Elastic Beanstalk during `UpdateEnvironment`, even when the region source bucket already exists.
 
+The deploy role also needs scoped CloudFormation read access for the Elastic Beanstalk environment stack:
+
+- `cloudformation:GetTemplate`
+- `cloudformation:DescribeStacks`
+- `cloudformation:DescribeStackEvents`
+- `cloudformation:DescribeStackResources`
+
 ## Console Deployment Path
 
 1. Open AWS Console.
