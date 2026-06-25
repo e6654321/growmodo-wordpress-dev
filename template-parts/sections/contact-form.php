@@ -6,9 +6,13 @@
  */
 ?>
 <?php $prefill_email = isset($_GET['email']) ? sanitize_email(wp_unslash($_GET['email'])) : ''; ?>
+<?php
+$current_request = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '/contact/';
+$redirect_to     = home_url($current_request);
+?>
 <form class="contact-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" data-contact-form>
     <input type="hidden" name="action" value="growmodo_contact">
-    <input type="hidden" name="redirect_to" value="<?php echo esc_url(get_permalink() ?: home_url('/contact/')); ?>">
+    <input type="hidden" name="redirect_to" value="<?php echo esc_url($redirect_to); ?>">
     <?php wp_nonce_field('growmodo_contact', 'growmodo_contact_nonce'); ?>
     <label>
         <span><?php esc_html_e('First Name', 'growmodo-assessment'); ?></span>
