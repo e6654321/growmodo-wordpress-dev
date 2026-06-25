@@ -140,9 +140,8 @@ GitHub Actions runs `.github/workflows/main.yml` on every push to `main` and on 
 The workflow also includes an optional Elastic Beanstalk deploy job. To enable it, configure these GitHub repository settings:
 
 - Repository variable: `ENABLE_AWS_EB_DEPLOY=true`
-- Repository secret: `AWS_ACCESS_KEY_ID`
-- Repository secret: `AWS_SECRET_ACCESS_KEY`
-- Repository secret: `AWS_EB_SOURCE_BUCKET`
+- Repository variable: `AWS_ROLE_TO_ASSUME=arn:aws:iam::004450693142:role/GitHubActionsGrowmodoEstateinDeploy`
+- Repository variable: `AWS_EB_SOURCE_BUCKET=elasticbeanstalk-us-west-2-004450693142`
 
 The deploy job targets the current dev environment documented in `AWS_DEPLOYMENT.md`: `growmodo-estatein-dev` / `growmodo-estatein-dev-env` in `us-west-2`.
 

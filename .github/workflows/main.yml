@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 env:
   AWS_REGION: us-west-2
@@ -74,15 +75,14 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Upload source bundle to S3
         run: |
           VERSION_LABEL="main-${GITHUB_SHA::7}-${GITHUB_RUN_NUMBER}"
           BUNDLE_KEY="elasticbeanstalk/${EB_APPLICATION_NAME}/${VERSION_LABEL}.zip"
-          aws s3 cp dist/growmodo-aws-eb-wordpress.zip "s3://${{ secrets.AWS_EB_SOURCE_BUCKET }}/${BUNDLE_KEY}"
+          aws s3 cp dist/growmodo-aws-eb-wordpress.zip "s3://${{ vars.AWS_EB_SOURCE_BUCKET }}/${BUNDLE_KEY}"
           echo "VERSION_LABEL=${VERSION_LABEL}" >> "$GITHUB_ENV"
           echo "BUNDLE_KEY=${BUNDLE_KEY}" >> "$GITHUB_ENV"
 
@@ -91,7 +91,7 @@ jobs:
           aws elasticbeanstalk create-application-version \
             --application-name "$EB_APPLICATION_NAME" \
             --version-label "$VERSION_LABEL" \
-            --source-bundle S3Bucket="${{ secrets.AWS_EB_SOURCE_BUCKET }}",S3Key="$BUNDLE_KEY"
+            --source-bundle S3Bucket="${{ vars.AWS_EB_SOURCE_BUCKET }}",S3Key="$BUNDLE_KEY"
 
       - name: Update Elastic Beanstalk environment
         run: |
