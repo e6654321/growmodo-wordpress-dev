@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('GROWMODO_ASSESSMENT_VERSION', '1.0.6');
+define('GROWMODO_ASSESSMENT_VERSION', '1.0.7');
 define('GROWMODO_ASSESSMENT_DIR', get_template_directory());
 define('GROWMODO_ASSESSMENT_URI', get_template_directory_uri());
 

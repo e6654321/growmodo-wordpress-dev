@@ -97,6 +97,11 @@ textarea {
     #1a1a1a;
 }
 
+.promo-banner[hidden],
+.promo-banner.is-hidden {
+  display: none;
+}
+
 .promo-banner__link {
   display: inline-flex;
   align-items: center;
@@ -144,6 +149,7 @@ textarea {
   position: absolute;
   top: 50%;
   right: 28px;
+  z-index: 2;
   display: inline-grid;
   width: 26px;
   height: 26px;

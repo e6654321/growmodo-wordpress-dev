@@ -54,8 +54,22 @@
   }
 
   if (promo && promoClose) {
-    promoClose.addEventListener('click', () => {
+    const promoStorageKey = 'growmodoPromoDismissed';
+
+    if (window.sessionStorage && sessionStorage.getItem(promoStorageKey) === '1') {
       promo.hidden = true;
+      promo.classList.add('is-hidden');
+    }
+
+    promoClose.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      promo.hidden = true;
+      promo.classList.add('is-hidden');
+
+      if (window.sessionStorage) {
+        sessionStorage.setItem(promoStorageKey, '1');
+      }
     });
   }
 
