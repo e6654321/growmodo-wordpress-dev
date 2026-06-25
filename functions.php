@@ -117,8 +117,12 @@ function growmodo_assessment_property_archive_order(WP_Query $query): void
         return;
     }
 
-    $query->set('orderby', 'date');
-    $query->set('order', 'ASC');
+    foreach (growmodo_assessment_property_query_args(array('posts_per_page' => get_option('posts_per_page'))) as $key => $value) {
+        if ($key === 'post_type') {
+            continue;
+        }
+        $query->set($key, $value);
+    }
 }
 add_action('pre_get_posts', 'growmodo_assessment_property_archive_order');
 
@@ -350,8 +354,12 @@ add_filter('excerpt_length', 'growmodo_assessment_excerpt_length');
 
 function growmodo_assessment_handle_contact(): void
 {
+    $fallback_redirect = home_url('/contact/');
+    $redirect_to       = isset($_POST['redirect_to']) ? esc_url_raw(wp_unslash($_POST['redirect_to'])) : $fallback_redirect;
+    $redirect_to       = wp_validate_redirect($redirect_to, $fallback_redirect);
+
     if (!isset($_POST['growmodo_contact_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['growmodo_contact_nonce'])), 'growmodo_contact')) {
-        wp_safe_redirect(home_url('/contact/?contact=invalid'));
+        wp_safe_redirect(add_query_arg('contact', 'invalid', $redirect_to));
         exit;
     }
 
@@ -360,7 +368,7 @@ function growmodo_assessment_handle_contact(): void
     $message = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
 
     if (!$name || !$email || !$message) {
-        wp_safe_redirect(home_url('/contact/?contact=missing'));
+        wp_safe_redirect(add_query_arg('contact', 'missing', $redirect_to));
         exit;
     }
 
@@ -372,7 +380,7 @@ function growmodo_assessment_handle_contact(): void
     );
 
     wp_mail(get_option('admin_email'), __('New website inquiry', 'growmodo-assessment'), $body, array('Reply-To: ' . $email));
-    wp_safe_redirect(home_url('/contact/?contact=sent'));
+    wp_safe_redirect(add_query_arg('contact', 'sent', $redirect_to));
     exit;
 }
 add_action('admin_post_growmodo_contact', 'growmodo_assessment_handle_contact');

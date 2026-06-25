@@ -6,12 +6,9 @@
  */
 
 get_header();
-$properties = new WP_Query(array(
-    'post_type'      => 'property',
-    'posts_per_page' => 9,
-    'orderby'        => 'date',
-    'order'          => 'ASC',
-));
+$property_search = growmodo_assessment_property_filter_value('property_search');
+$properties      = new WP_Query(growmodo_assessment_property_query_args());
+$has_properties  = $properties->have_posts();
 ?>
 <main id="main" class="site-main">
     <section class="page-hero page-hero--properties">
@@ -20,18 +17,14 @@ $properties = new WP_Query(array(
             <p class="page-hero__description"><?php esc_html_e('Welcome to Estatein, where your dream property awaits in every corner of our beautiful world. Explore our curated selection of properties, each offering a unique story and a chance to redefine your life.', 'growmodo-assessment'); ?></p>
         </div>
         <div class="container property-search">
-            <form class="property-search__bar" role="search" action="<?php echo esc_url(home_url('/properties/')); ?>" method="get">
-                <label class="screen-reader-text" for="property-search"><?php esc_html_e('Search for a property', 'growmodo-assessment'); ?></label>
-                <input id="property-search" name="s" type="search" placeholder="<?php esc_attr_e('Search For A Property', 'growmodo-assessment'); ?>">
-                <button class="button button--primary" type="submit"><?php esc_html_e('Find Property', 'growmodo-assessment'); ?></button>
+            <form class="property-search__form" role="search" action="<?php echo esc_url(home_url('/properties/')); ?>" method="get">
+                <div class="property-search__bar">
+                    <label class="screen-reader-text" for="property-search"><?php esc_html_e('Search for a property', 'growmodo-assessment'); ?></label>
+                    <input id="property-search" name="property_search" type="search" value="<?php echo esc_attr($property_search); ?>" placeholder="<?php esc_attr_e('Search For A Property', 'growmodo-assessment'); ?>">
+                    <button class="button button--primary" type="submit"><?php esc_html_e('Find Property', 'growmodo-assessment'); ?></button>
+                </div>
+                <?php growmodo_assessment_property_filters_markup(); ?>
             </form>
-            <div class="property-search__filters" aria-label="<?php esc_attr_e('Property filters', 'growmodo-assessment'); ?>">
-                <button class="filter-location" type="button"><?php esc_html_e('Location', 'growmodo-assessment'); ?></button>
-                <button class="filter-type" type="button"><?php esc_html_e('Property Type', 'growmodo-assessment'); ?></button>
-                <button class="filter-price" type="button"><?php esc_html_e('Pricing Range', 'growmodo-assessment'); ?></button>
-                <button class="filter-size" type="button"><?php esc_html_e('Property Size', 'growmodo-assessment'); ?></button>
-                <button class="filter-year" type="button"><?php esc_html_e('Build Year', 'growmodo-assessment'); ?></button>
-            </div>
         </div>
     </section>
     <section class="section">
@@ -41,7 +34,7 @@ $properties = new WP_Query(array(
             <p><?php esc_html_e('Explore the following categories to find the perfect property that resonates with your vision of home.', 'growmodo-assessment'); ?></p>
         </div>
         <div class="container work-grid">
-            <?php if ($properties->have_posts()) : ?>
+            <?php if ($has_properties) : ?>
                 <?php while ($properties->have_posts()) : $properties->the_post(); ?>
                     <?php get_template_part('template-parts/content', 'property'); ?>
                 <?php endwhile; wp_reset_postdata(); ?>
@@ -97,6 +90,13 @@ $properties = new WP_Query(array(
                         </a>
                     </article>
                 <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!$has_properties && array_filter(array_map('growmodo_assessment_property_filter_value', array('property_search', 'location', 'property_type', 'price_range', 'bedrooms')))) : ?>
+                <article class="empty-state">
+                    <h2><?php esc_html_e('No matching properties yet', 'growmodo-assessment'); ?></h2>
+                    <p><?php esc_html_e('Adjust your search or clear the filters to see more available homes.', 'growmodo-assessment'); ?></p>
+                    <?php growmodo_assessment_button(__('Clear Filters', 'growmodo-assessment'), home_url('/properties/'), 'secondary'); ?>
+                </article>
             <?php endif; ?>
         </div>
         <div class="container section-pager" aria-label="<?php esc_attr_e('Properties carousel controls', 'growmodo-assessment'); ?>">

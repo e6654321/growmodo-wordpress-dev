@@ -88,6 +88,7 @@ get_header();
                     </div>
                     <form class="contact-form property-inquiry-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" data-contact-form>
                         <input type="hidden" name="action" value="growmodo_contact">
+                        <input type="hidden" name="redirect_to" value="<?php echo esc_url(get_permalink()); ?>">
                         <?php wp_nonce_field('growmodo_contact', 'growmodo_contact_nonce'); ?>
                         <label>
                             <span><?php esc_html_e('First Name', 'growmodo-assessment'); ?></span>

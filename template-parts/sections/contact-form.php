@@ -5,8 +5,10 @@
  * @package GrowmodoAssessment
  */
 ?>
+<?php $prefill_email = isset($_GET['email']) ? sanitize_email(wp_unslash($_GET['email'])) : ''; ?>
 <form class="contact-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" data-contact-form>
     <input type="hidden" name="action" value="growmodo_contact">
+    <input type="hidden" name="redirect_to" value="<?php echo esc_url(get_permalink() ?: home_url('/contact/')); ?>">
     <?php wp_nonce_field('growmodo_contact', 'growmodo_contact_nonce'); ?>
     <label>
         <span><?php esc_html_e('First Name', 'growmodo-assessment'); ?></span>
@@ -18,7 +20,7 @@
     </label>
     <label>
         <span><?php esc_html_e('Email', 'growmodo-assessment'); ?></span>
-        <input name="email" type="email" autocomplete="email" placeholder="<?php esc_attr_e('Enter your Email', 'growmodo-assessment'); ?>" required>
+        <input name="email" type="email" autocomplete="email" value="<?php echo esc_attr($prefill_email); ?>" placeholder="<?php esc_attr_e('Enter your Email', 'growmodo-assessment'); ?>" required>
     </label>
     <label>
         <span><?php esc_html_e('Phone', 'growmodo-assessment'); ?></span>

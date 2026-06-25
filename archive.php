@@ -8,6 +8,7 @@
 get_header();
 $is_property_archive = is_post_type_archive('property');
 $is_service_archive  = is_post_type_archive('service');
+$property_search     = growmodo_assessment_property_filter_value('property_search');
 ?>
 <main id="main" class="site-main">
     <header class="page-hero <?php echo $is_property_archive ? 'page-hero--properties' : ''; ?>">
@@ -26,18 +27,14 @@ $is_service_archive  = is_post_type_archive('service');
         </div>
         <?php if ($is_property_archive) : ?>
             <div class="container property-search">
-                <form class="property-search__bar" role="search" action="<?php echo esc_url(home_url('/properties/')); ?>" method="get">
-                    <label class="screen-reader-text" for="property-archive-search"><?php esc_html_e('Search for a property', 'growmodo-assessment'); ?></label>
-                    <input id="property-archive-search" name="s" type="search" placeholder="<?php esc_attr_e('Search For A Property', 'growmodo-assessment'); ?>">
-                    <button class="button button--primary" type="submit"><?php esc_html_e('Find Property', 'growmodo-assessment'); ?></button>
+                <form class="property-search__form" role="search" action="<?php echo esc_url(home_url('/properties/')); ?>" method="get">
+                    <div class="property-search__bar">
+                        <label class="screen-reader-text" for="property-archive-search"><?php esc_html_e('Search for a property', 'growmodo-assessment'); ?></label>
+                        <input id="property-archive-search" name="property_search" type="search" value="<?php echo esc_attr($property_search); ?>" placeholder="<?php esc_attr_e('Search For A Property', 'growmodo-assessment'); ?>">
+                        <button class="button button--primary" type="submit"><?php esc_html_e('Find Property', 'growmodo-assessment'); ?></button>
+                    </div>
+                    <?php growmodo_assessment_property_filters_markup(); ?>
                 </form>
-                <div class="property-search__filters" aria-label="<?php esc_attr_e('Property filters', 'growmodo-assessment'); ?>">
-                    <button class="filter-location" type="button"><?php esc_html_e('Location', 'growmodo-assessment'); ?></button>
-                    <button class="filter-type" type="button"><?php esc_html_e('Property Type', 'growmodo-assessment'); ?></button>
-                    <button class="filter-price" type="button"><?php esc_html_e('Pricing Range', 'growmodo-assessment'); ?></button>
-                    <button class="filter-size" type="button"><?php esc_html_e('Property Size', 'growmodo-assessment'); ?></button>
-                    <button class="filter-year" type="button"><?php esc_html_e('Build Year', 'growmodo-assessment'); ?></button>
-                </div>
             </div>
         <?php endif; ?>
     </header>

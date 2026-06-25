@@ -1689,6 +1689,7 @@ h3 {
 }
 
 .property-search input,
+.property-search__filters select,
 .property-search__filters button,
 .footer-subscribe input {
   border: 1px solid var(--border);
@@ -1713,16 +1714,33 @@ h3 {
   background: var(--surface);
 }
 
-.property-search__filters button {
+.property-search__filters label {
   position: relative;
+  display: block;
+}
+
+.property-search__filters select,
+.property-search__filters button {
+  width: 100%;
   min-height: 58px;
   padding: 0 42px 0 50px;
   color: var(--muted-2);
   text-align: left;
+}
+
+.property-search__filters select {
+  appearance: none;
   cursor: pointer;
 }
 
-.property-search__filters button::before {
+.property-search__filters button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+
+.property-search__filters label::before {
   position: absolute;
   top: 50%;
   left: 18px;
@@ -1735,6 +1753,8 @@ h3 {
   content: "\2302";
   font-size: 14px;
   transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .property-search__filters .filter-type::before {
@@ -1750,18 +1770,25 @@ h3 {
 }
 
 .property-search__filters .filter-year::before {
-  content: "\25CC";
+  content: "\2713";
 }
 
-.property-search__filters button::after {
+.property-search__filters label::after {
   position: absolute;
   top: 50%;
   right: 16px;
   content: "\2304";
   transform: translateY(-58%);
+  pointer-events: none;
 }
 
+.property-search__filters .filter-year::after {
+  content: "";
+}
+
+.property-search__filters select:hover,
 .property-search__filters button:hover,
+.property-search__filters select:focus-visible,
 .property-search__filters button:focus-visible {
   border-color: var(--purple);
   color: var(--text);
@@ -2222,6 +2249,7 @@ h3 {
   }
 
   .property-search input,
+  .property-search__filters select,
   .property-search__filters button {
     min-height: 52px;
   }

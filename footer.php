@@ -14,7 +14,8 @@
             </a>
             <form class="footer-subscribe" action="<?php echo esc_url(home_url('/contact/')); ?>" method="get">
                 <label class="screen-reader-text" for="footer-email"><?php esc_html_e('Email address', 'growmodo-assessment'); ?></label>
-                <input id="footer-email" type="email" placeholder="<?php esc_attr_e('Enter Your Email', 'growmodo-assessment'); ?>">
+                <input id="footer-email" name="email" type="email" placeholder="<?php esc_attr_e('Enter Your Email', 'growmodo-assessment'); ?>" required>
+                <input type="hidden" name="contact" value="subscribe">
                 <button type="submit" aria-label="<?php esc_attr_e('Submit email', 'growmodo-assessment'); ?>">&#8594;</button>
             </form>
         </div>
