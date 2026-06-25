@@ -80,7 +80,7 @@ jobs:
 
       - name: Upload source bundle to S3
         run: |
-          VERSION_LABEL="main-${GITHUB_SHA::7}-${GITHUB_RUN_NUMBER}"
+          VERSION_LABEL="main-${GITHUB_SHA::7}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
           BUNDLE_KEY="elasticbeanstalk/${EB_APPLICATION_NAME}/${VERSION_LABEL}.zip"
           aws s3 cp dist/growmodo-aws-eb-wordpress.zip "s3://${{ vars.AWS_EB_SOURCE_BUCKET }}/${BUNDLE_KEY}"
           echo "VERSION_LABEL=${VERSION_LABEL}" >> "$GITHUB_ENV"
