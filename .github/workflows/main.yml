@@ -13,7 +13,7 @@ permissions:
 env:
   AWS_REGION: us-west-2
   EB_APPLICATION_NAME: growmodo-estatein-dev
-  EB_ENVIRONMENT_NAME: growmodo-estatein-dev-env
+  EB_ENVIRONMENT_NAME: growmodo-estatein-dev-t3
 
 jobs:
   build:

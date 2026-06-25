@@ -38,13 +38,12 @@ The Elastic Beanstalk app runs:
 
 - AWS region: `us-west-2`
 - Elastic Beanstalk application: `growmodo-estatein-dev`
-- Elastic Beanstalk environment: `growmodo-estatein-dev-env`
-- Environment ID: `e-fpq6jzrmps`
-- EC2 instance: `i-02167fcd2cde487c5`
-- Working dev URL: `http://44.226.48.168/`
-- Elastic Beanstalk CNAME: `growmodo-estatein-dev-env.eba-pd6rqmm3.us-west-2.elasticbeanstalk.com`
+- Elastic Beanstalk environment: `growmodo-estatein-dev-t3`
+- Working dev URL: `http://growmodo-estatein-dev-t3.us-west-2.elasticbeanstalk.com/`
+- Elastic Beanstalk CNAME: `growmodo-estatein-dev-t3.us-west-2.elasticbeanstalk.com`
+- Instance class: `t3.small`
 
-The EC2 IP was verified successfully immediately after deployment. The Elastic Beanstalk CNAME may need additional DNS propagation time before it resolves consistently.
+The dev URL was verified with HTTP `200 OK` after WordPress first-run setup and activation of **Growmodo Assessment Theme**.
 
 ## GitHub Actions Deployment
 
@@ -85,8 +84,8 @@ The deploy role also needs scoped CloudFormation read access for the Elastic Bea
 5. Platform: Docker.
 6. Application code: upload `dist/growmodo-aws-eb-wordpress.zip`.
 7. Environment type: single instance.
-8. Instance type: choose a free-tier eligible micro instance if the account is eligible.
-9. Avoid load balancers, RDS, NAT Gateways, and extra static IPs for this temporary dev deployment.
+8. Instance type: use at least `t3.small` for this Docker Compose package. A `t3.micro` instance was not reliable for WordPress plus MySQL in one environment.
+9. Avoid RDS, NAT Gateways, and extra static IPs for this temporary dev deployment.
 10. Create environment.
 
 After AWS finishes provisioning, open the Elastic Beanstalk environment URL.

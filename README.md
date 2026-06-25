@@ -4,8 +4,8 @@ Custom WordPress theme for the Growmodo WordPress Developer assessment. The them
 
 ## Live Dev Site
 
-- Dev URL: `http://44.226.48.168/`
-- WordPress Admin: `http://44.226.48.168/wp-admin/`
+- Dev URL: `http://growmodo-estatein-dev-t3.us-west-2.elasticbeanstalk.com/`
+- WordPress Admin: `http://growmodo-estatein-dev-t3.us-west-2.elasticbeanstalk.com/wp-admin/`
 - AWS notes: see `AWS_DEPLOYMENT.md`.
 
 ## Project Overview
@@ -143,7 +143,7 @@ The workflow also includes an optional Elastic Beanstalk deploy job. To enable i
 - Repository variable: `AWS_ROLE_TO_ASSUME=arn:aws:iam::004450693142:role/GitHubActionsGrowmodoEstateinDeploy`
 - Repository variable: `AWS_EB_SOURCE_BUCKET=elasticbeanstalk-us-west-2-004450693142`
 
-The deploy job targets the current dev environment documented in `AWS_DEPLOYMENT.md`: `growmodo-estatein-dev` / `growmodo-estatein-dev-env` in `us-west-2`.
+The deploy job targets the current dev environment documented in `AWS_DEPLOYMENT.md`: `growmodo-estatein-dev` / `growmodo-estatein-dev-t3` in `us-west-2`.
 
 ## Testing Checklist
 
