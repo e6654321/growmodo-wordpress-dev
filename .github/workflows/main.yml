@@ -60,7 +60,7 @@ jobs:
     name: Deploy to AWS Elastic Beanstalk
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ vars.ENABLE_AWS_EB_DEPLOY == 'true' }}
+    if: ${{ vars.ENABLE_AWS_EB_DEPLOY == 'true' && vars.AWS_DEPLOY_ENABLED == 'true' }}
 
     steps:
       - name: Checkout
